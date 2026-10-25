@@ -1,0 +1,43 @@
+version: 2.1
+
+jobs:
+  flutter-ci:
+    docker:
+      - image: cimg/android:2025.01.1
+    environment:
+      FLUTTER_HOME: /opt/flutter
+    steps:
+      - checkout
+      - run:
+          name: Install Flutter stable
+          command: |
+            git clone --depth 1 --branch stable https://github.com/flutter/flutter.git "$FLUTTER_HOME"
+            echo 'export PATH=/opt/flutter/bin:$PATH' >> "$BASH_ENV"
+      - run:
+          name: Accept Android SDK licences
+          command: |
+            yes | flutter doctor --android-licenses
+      - run:
+          name: Generate Android platform files
+          command: |
+            flutter create --platforms=android .
+      - run:
+          name: Resolve dependencies
+          command: flutter pub get
+      - run:
+          name: Analyze Dart code
+          command: flutter analyze
+      - run:
+          name: Run Flutter tests
+          command: flutter test
+      - run:
+          name: Build ARM64 release APK
+          command: flutter build apk --release --target-platform android-arm64
+      - store_artifacts:
+          path: build/app/outputs/flutter-apk/app-release.apk
+          destination: app-release-arm64.apk
+
+workflows:
+  flutter-android-build:
+    jobs:
+      - flutter-ci
