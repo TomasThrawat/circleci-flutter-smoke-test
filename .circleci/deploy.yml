@@ -12,6 +12,9 @@ jobs:
             git clone --depth 1 --branch stable https://github.com/flutter/flutter.git "$HOME/flutter"
             echo 'export PATH="$HOME/flutter/bin:$PATH"' >> "$BASH_ENV"
       - run:
+          name: Verify Flutter installation
+          command: flutter --version
+      - run:
           name: Accept Android SDK licences
           command: |
             # Flutter exits after all licenses are accepted, which closes the pipe.
@@ -43,4 +46,3 @@ workflows:
   flutter-android-build:
     jobs:
       - flutter-ci
-      
