@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:circleci_flutter_smoke_test/main.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   testWidgets('shows the smoke test screen', (tester) async {
